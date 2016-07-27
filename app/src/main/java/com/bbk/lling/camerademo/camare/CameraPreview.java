@@ -21,6 +21,7 @@ import com.bbk.lling.camerademo.utils.Utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -29,8 +30,7 @@ import java.util.List;
  * @author: lling(www.cnblogs.com/liuling)
  * @Date: 2015/10/25
  */
-public class CameraPreview extends SurfaceView implements
-		SurfaceHolder.Callback, AutoFocusCallback {
+public class  CameraPreview extends SurfaceView implements SurfaceHolder.Callback, AutoFocusCallback {
 	private static final String TAG = "CameraPreview";
 
 	private int viewWidth = 0;
@@ -285,6 +285,29 @@ public class CameraPreview extends SurfaceView implements
 					Utils.getScreenWH(getContext()).widthPixels);
 		}
 	}
+
+	private Camera.Size getPreviewSize(Camera.Parameters parameters) {
+		int width = 0;//------------不符合显示要求的尺寸
+		int height = 0;//------------不符合显示要求的尺寸
+		//TODO
+		//给不符合的尺寸付初始值
+		List<Camera.Size> sizeLise = parameters.getSupportedPictureSizes();
+
+		Iterator<Camera.Size> iterator = sizeLise.iterator();
+
+		while(iterator.hasNext()) {
+			Camera.Size cur = iterator.next();
+			if(cur.width >= width && cur.height >= height) {
+			    width = cur.width;
+				height = cur.height;
+				break;
+			}
+		}
+
+		return camera.new Size(width, height);
+		//return camera.new Size((int) bestX, (int) bestY);
+		//return  null;
+ 	}
 
 	/**
 	 * 找到最合适的显示分辨率 （防止预览图像变形）
